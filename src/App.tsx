@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Box } from "@material-ui/core";
 import 'fontsource-roboto';
 import './App.css';
-import {Board, Controls, ErrorPanel} from './components';
+import {Board,  ErrorPanel} from './components';
 const App = () => (
     <div className="App-header">
       <Typography variant='h5'>
@@ -10,9 +10,9 @@ const App = () => (
           SUDOKO BOARD
         </Box>
       </Typography>
-      <header>
+      {/* <header>
         <Controls/>
-      </header>
+      </header> */}
       <section className="App-body">
         <Box 
           display='flex' 

@@ -32,35 +32,29 @@ const isCubeValid = () => {
   
 }
 const isRowColValid = () => {
-  const numbers: Array<number> = [];
+  const numbers: {cols: Array<number>, rows: Array<number>} = {
+    cols: [], rows: []
+  };
   for (let i = 1; i <= 9; i++) {
-    for (let j = 1; j <= i; j++) {
-      const div = document.getElementById(`${i},${j}`);
-      if (!div) {
+    for (let j = 1; j <= 9; j++) {
+      const divRow = document.getElementById(`${i},${j}`);
+      const divCol = document.getElementById(`${j},${i}`);
+      if (!divRow || !divCol) {
         throw new Error(`Something went wrong!`);
       }
-      const val = +div.innerHTML || 0;
-      if (numbers.includes(val)) {
-        throw new Error(`Oops! ${val} already exists in this row`);
+      const valRow = +divRow.innerHTML || 0;
+      const valCol = +divCol.innerHTML || 0;
+      if (numbers.rows.includes(valRow)) {
+        throw new Error(`Oops! ${valRow} already exists in this row`);
       }
-      if (val) numbers.push(val);
+      if (numbers.cols.includes(valCol)) {
+        throw new Error(`Oops! ${valCol} already exists in this column`);
+      }
+      if (valRow) numbers.rows.push(valRow);
+      if (valCol) numbers.cols.push(valCol);
     }
-    numbers.length = 0;
-  }
-  // Check column
-  for (let i = 1; i <= 9; i++) {
-    for (let j = i; j <=9; j++) {
-      const div = document.getElementById(`${i},${j}`);
-      if (!div) {
-        throw new Error(`Something went wrong!`);
-      }
-      const val = +div.innerHTML || 0;
-      if (numbers.includes(val)) {
-        throw new Error(`Oops! ${val} already exists in this row`);
-      }
-      if (val) numbers.push(val);
-    }
-    numbers.length = 0;
+    numbers.cols.length = 0;
+    numbers.rows.length = 0;
   }
 }
 
