@@ -45,27 +45,27 @@ const Cell = ({id}) => {
   },[id]);
   const [x, y] = id.split(',');
   const {eachCell, cubeBorderBottom, cubeBorderRight,cubeBorderTop, cubeBorderLeft} = useStyles();
-  let suplClass = eachCell;
+  let suplClass = `${eachCell}`;
   if (x % 3 === 0 && y % 3 === 0) {
-    suplClass = `${suplClass} ${cubeBorderBottom} ${cubeBorderRight}`;
+    suplClass = `${suplClass} ${cubeBorderRight} ${cubeBorderBottom}`;
   } else if (x % 3 === 0) {
-    suplClass = `${suplClass} ${cubeBorderBottom}`;
-  } else if (y % 3 === 0) {
     suplClass = `${suplClass} ${cubeBorderRight}`;
+  } else if (y % 3 === 0) {
+    suplClass = `${suplClass} ${cubeBorderBottom}`;
   }
   if (x%3 === 1 && y % 3 ===1) {
-    suplClass = ` ${suplClass} ${cubeBorderTop} ${cubeBorderLeft}`;
+    suplClass = ` ${suplClass} ${cubeBorderLeft} ${cubeBorderTop}`;
   } else if (x % 3 === 1) {
-    suplClass = `${suplClass} ${cubeBorderTop}`;
-  } else if ( y % 3 ===1) {
     suplClass = `${suplClass} ${cubeBorderLeft}`;
+  } else if ( y % 3 ===1) {
+    suplClass = `${suplClass} ${cubeBorderTop}`;
   }
 
   return (
   <Paper 
     onDoubleClick={(e) => handleCellDoubleClick(e, id)} 
     className={suplClass ? suplClass : eachCell}  
-    elevation={3} 
+    elevation={3}
     id={id}
     variant="outlined" 
     square>{val || ''}</Paper>)}

@@ -9,8 +9,10 @@ const handleCellDoubleClick = (e, id) => {
   input.style.width='100%';
   input.style.height='80%';
   input.style.font = 'inherit';
+  input.type= 'number';
+  input.pattern = '\\d';
   input.focus();
-  input.onblur = (e) => handleOnBlur(e,id, oldVal)
+  input.onblur = (e) => handleOnBlur(e,id, oldVal);
 }
 
 const handleOnBlur = (e, parentId: string, oldVal: number) => {
@@ -18,27 +20,58 @@ const handleOnBlur = (e, parentId: string, oldVal: number) => {
   if (!div) {
     throw new Error(`Missing the correct container`);
   }
-  div.innerHTML = e.currentTarget.value || oldVal;
+  const newVal = e.currentTarget.value || oldVal;
+  div.innerHTML = newVal || '';
   e.currentTarget.remove();
   div.style.background = 'white';
-  const error = computeResult();
+  const error = computeResult(parentId);
   displayError('');
   if (error) {
     div.style.background = '#f50057';
     displayError(error)
+    div.innerHTML = '';
   }
 }
-const isCubeValid = () => {
+
+const isSquareValid = (id) => {
+  let cubes: Array<number> = [];
+  const [x, y] = id.split(',');
+  const commCords = [1,4,7];
+  const minCordsX = [...commCords, +x].sort();
+  const minCordsY = [...commCords, +y].sort();
+  const xMin = minCordsX[minCordsX.lastIndexOf(+x) -1];
+  const yMin = minCordsY[minCordsY.lastIndexOf(+y) -1];
   
+  const trackSize = 2;
+  const xMax = (xMin + trackSize);
+  const yMax = (yMin + trackSize);
+  for (let i = xMin; i <= xMax; i++) {
+    for (let j = yMin; j <= yMax; j++) {
+      const eachSquareDiv = document.getElementById(`${i},${j}`);
+      if (!eachSquareDiv) {
+        throw new Error(`Something went wrong!`);
+      }
+      const valSquare = (eachSquareDiv && +eachSquareDiv.innerHTML) || 0;
+      if (cubes.includes(valSquare)) {
+        throw new Error(`Oops! ${valSquare} already exists in this enclosing square`);
+      }
+      if (valSquare) cubes.push(valSquare);
+    }
+  }
 }
-const isRowColValid = () => {
-  const numbers: {cols: Array<number>, rows: Array<number>} = {
+
+const isRowColValid = (id) => {
+  const [x, y] = id.split(',');
+  const numbers: {
+    cols: Array<number>, 
+    rows: Array<number>
+  } = {
     cols: [], rows: []
   };
+
   for (let i = 1; i <= 9; i++) {
-    for (let j = 1; j <= 9; j++) {
-      const divRow = document.getElementById(`${i},${j}`);
-      const divCol = document.getElementById(`${j},${i}`);
+    const divRow = document.getElementById(`${x},${i}`);
+    const divCol = document.getElementById(`${i},${y}`);
       if (!divRow || !divCol) {
         throw new Error(`Something went wrong!`);
       }
@@ -52,24 +85,19 @@ const isRowColValid = () => {
       }
       if (valRow) numbers.rows.push(valRow);
       if (valCol) numbers.cols.push(valCol);
-    }
-    numbers.cols.length = 0;
-    numbers.rows.length = 0;
   }
 }
 
-const computeResult = () => {
+const computeResult = (id) => {
   let error = ``;
   try {
-    isCubeValid();
-    isRowColValid();
+    isSquareValid(id);
+    isRowColValid(id);
 
   } catch (err) {
     error = err;;
-  } finally {
-    return error;
-  }
-  
+  } 
+  return error;
 }
 
 const displayError = (error) => {
@@ -90,6 +118,5 @@ const initializeBoard = () => {
     '9,9': 7
   }
 }
-
 
 export {handleCellDoubleClick, initializeBoard};

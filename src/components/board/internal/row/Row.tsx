@@ -12,7 +12,7 @@ const Row = ({rowId}) => <Box
   width={1}
   height="75px"
 >
-  {Array.from({length: 9 }, (_, id) => (<Cell key={id} id={`${rowId},${(+id + 1)}`}/>))}
+  {Array.from({length: 9 }, (_, id) => (<Cell key={id} id={`${(+id + 1)},${rowId}`}/>))}
 </Box>
 
 export default Row;
